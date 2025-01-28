@@ -46,7 +46,7 @@ class NetworkController {
     }
     
     
-    static func fetchPokemon(for searchTerm: String) async throws -> Pokemon? {
+    static func fetchPokemon(_ searchTerm: String) async throws -> Pokemon? {
            guard let url = URL(string: "https://pokeapi.co/api/v2/pokemon/") else {
                throw URLError(.badURL)
            }
