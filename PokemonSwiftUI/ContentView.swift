@@ -48,13 +48,12 @@ struct ContentView: View {
                     .padding()
                 
             } else if let pokemon = pokemon { // if a pokemon exists run this
-                VStack{
-                    Text(pokemon.name)
-                        .padding()
-                    Text(pokemon.abilities.first ?? "no abilities")
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                
+                
+                PokemonView(pokemon: pokemon)
 
+                
+                
                 
             } else if let error = errorMessage { // if there isnt a pokemon run an error message
                 Text(error)
@@ -62,7 +61,7 @@ struct ContentView: View {
                     .padding()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
-                    Text("Please Search for a Pokemon")
+                Text("Please Search for a Pokemon")
                         .font(.largeTitle)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
@@ -102,11 +101,56 @@ struct ContentView: View {
     }
 }
 
-//struct PokemonView: View {
-//    typealias Body = 
-//    
-//    
-//}
+struct PokemonView: View {
+    
+    let pokemon: Pokemon
+    
+    var body: some View {
+        VStack{
+            AsyncImage(url: pokemon.imageURLs.last) { phase in
+                switch phase {
+                case .empty:
+                    ProgressView()
+                case .success(let image):
+                    
+                    image
+                        .resizable()
+                        .scaledToFill()
+                        .frame(maxWidth: 140, maxHeight: 140)
+                    
+                case .failure:
+                    EmptyView()
+                @unknown default:
+                    EmptyView()
+                }
+                
+            }
+            HStack {
+                Text(pokemon.name.capitalized)
+                    .font(.largeTitle)
+                    .padding()
+                ForEach(pokemon.types, id:\.self) { poketype in
+                    Text(poketype)
+                        .padding(.trailing, 20)
+                }
+               // Text(pokemon.types.first ?? "no abilities")
+            }
+            .background(Color.yellow)
+            .cornerRadius(14)
+
+            ForEach(pokemon.abilities, id:\.self) { ability in
+                Text(ability)
+                    .background(Color.yellow)
+                    .font(.title)
+                    .cornerRadius(12)
+                
+            }
+            
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.mint)
+    }
+}
 
 #Preview {
     ContentView()
