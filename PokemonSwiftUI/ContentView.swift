@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @State private var searchText = ""
+    @State private var searchText = "Charmander"
     @State private var pokemon: Pokemon? = nil
     
     @State private var errorMessage: String? = nil
@@ -129,26 +129,74 @@ struct PokemonView: View {
                 Text(pokemon.name.capitalized)
                     .font(.largeTitle)
                     .padding()
-                ForEach(pokemon.types, id:\.self) { poketype in
-                    Text(poketype)
-                        .padding(.trailing, 20)
-                }
-               // Text(pokemon.types.first ?? "no abilities")
             }
             .background(Color.yellow)
             .cornerRadius(14)
 
-            ForEach(pokemon.abilities, id:\.self) { ability in
-                Text(ability)
-                    .background(Color.yellow)
-                    .font(.title)
-                    .cornerRadius(12)
+            List {
+                Section {
+                    ForEach(pokemon.abilities, id:\.self) { ability in
+                        PokemonViewRow(pokeText: ability)
+                        .listRowBackground(
+                        Capsule()
+                        .fill(Color(white: 1, opacity: 0.8))
+                        .padding(.vertical, 10)
+                        .padding(.horizontal, 20)
+                    )
+                        
+                    }
+                    .listRowSeparator(.hidden)
+                    .foregroundColor(.yellow)
+                } header: {
+                    Text("Abilities")
+                }
+
+                
+                Section {
+                    ForEach(pokemon.types, id:\.self) { poketype in
+                    PokemonViewRow(pokeText: poketype)
+                            .listRowBackground(
+                            Capsule()
+                            .fill(Color(white: 1, opacity: 0.8))
+                            .padding(.vertical, 2)
+                            .padding(.horizontal, 20)
+                                            )
+                            
+                    }
+                    .listRowSeparator(.hidden)
+                    .foregroundColor(.red)
+
+                }
+                header: {
+                    Text("Types")
+                }
                 
             }
+            .environment(\.defaultMinListRowHeight, 80)
+
+
             
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.mint)
+    }
+    
+
+}
+
+struct PokemonViewRow: View {
+    let pokeText: String
+    
+    var body: some View {
+        HStack {
+            Text(pokeText)
+                .font(.title)
+                .padding(.leading, 10)
+            Spacer()
+            Text(pokeText)
+                .font(.title)
+                .padding(.trailing, 10)
+        }
     }
 }
 
